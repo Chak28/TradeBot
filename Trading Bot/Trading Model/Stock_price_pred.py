@@ -24,7 +24,8 @@ CORS(app, resources={
     }
 })
 
-
+### Test comment for deployment purposes
+## New changes exist
 # print("Enter the Stock Code :")
 # ticker = str(input())
 @app.route("/get_stocks")
