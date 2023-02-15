@@ -4,6 +4,7 @@ FROM python:3.9
 COPY ./ ./src
 # Specifying Working Directory
 WORKDIR ./src
+RUN echo "Working Directory"
 # Installing requirements using txt file
 RUN pip install -r requirements.txt
 # Exposing the required port number
