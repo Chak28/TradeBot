@@ -37,8 +37,6 @@ jobs:
         with:
           service_account_key: ${{secrets.GKE_SA_KEY}}
           project_id: ${{secrets.GKE_PROJECT}}
-          run: |-
-            gcloud components install gke-gcloud-auth-plugin
 
       - name: Configure Docker
         run: |-
@@ -63,6 +61,7 @@ jobs:
 
       - name: Deploy Image to GKE cluster
         run: |-
+          gcloud components install gke-gcloud-auth-plugin
           ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$TAG
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
