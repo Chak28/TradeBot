@@ -37,6 +37,8 @@ jobs:
         with:
           service_account_key: ${{secrets.GKE_SA_KEY}}
           project_id: ${{secrets.GKE_PROJECT}}
+          run: |-
+            gcloud components install gke-gcloud-auth-plugin
 
       - name: Configure Docker
         run: |-
