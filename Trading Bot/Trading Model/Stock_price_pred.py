@@ -27,6 +27,10 @@ CORS(app, resources={
 ### Test comment
 # print("Enter the Stock Code :")
 # ticker = str(input())
+
+##NEw change to test out the code push
+
+
 @app.route("/get_stocks")
 def main():
     try:
