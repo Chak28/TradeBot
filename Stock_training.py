@@ -185,64 +185,59 @@ def plot_acf_pacf(ts,ticker, figsize=(10,8),lags=5):
         a.xaxis.grid()
     fig.savefig(f'./Plots/{ticker}_ACF_PACF.png', format = 'png')
 
+
 #########################################  MAIN Function  #########################################
+def main(tickers:list):
+	print(f'The Entered Stock Codes are: {tickers[0]} & {tickers[1]}')
+	start_training, end_training, start_testing, end_testing = get_dates()
+	for i in range(len(list(tickers))):
+		ticker = tickers[i]
+		print(f'Training ARIMA Model for {ticker} Stock')
+		df = get_yahoo_data(ticker,start_training,end_training)
+		print(df.shape)
+		## Selecting only the market close prices for everyday
+		df = df['Close']
 
-## Taking Stock Code as input
-# print("Enter Ticker")
-# ticker = str(input("Ticker"))
+		## Fill all missing dates to account for Market closure on weekends
+		df = df.resample('D').fillna(method = 'ffill')
 
-#ticker = 'MSFT'
-print('Enter 2 input Stock Codes separated by comma')
-tickers = list(input().split(',', 2)) ## Here we can use Database to pull the list of stocks to scale more than 100 stocks
-print(f'The Entered Stock Codes are: {tickers[0]} & {tickers[1]}')
-# Getting the Time Series relevant dates and ingest data from Yahoo finance
+		## Saving Evaluation of Time Series Data - Stationarity test, Time Series Decomposition and ACF, PACF
+		stationarity_check(df,ticker)
+		plot_acf_pacf(df,ticker)
 
-start_training, end_training, start_testing, end_testing = get_dates()
+		## Time Series Decomposition
+		decomposition = seasonal_decompose(np.log(df))
 
-for i in range(len(list(tickers))):
-	ticker = tickers[i]
-	print(f'Training ARIMA Model for {ticker} Stock')
-	df = get_yahoo_data(ticker,start_training,end_training)
-	print(df.shape)
-	## Selecting only the market close prices for everyday
-	df = df['Close']
+		# Get trend, seasonality, and residuals
+		trend = decomposition.trend
+		seasonal = decomposition.seasonal
+		residual = decomposition.resid
 
-	## Fill all missing dates to account for Market closure on weekends
-	df = df.resample('D').fillna(method = 'ffill')
+		# Saving the Decomposed Time Series Data
+		plt.figure(figsize=(12,8))
+		plt.subplot(411)
+		plt.plot(np.log(df), label='Original', color='blue')
+		plt.legend(loc='best')
+		plt.subplot(412)
+		plt.plot(trend, label='Trend', color='blue')
+		plt.legend(loc='best')
+		plt.subplot(413)
+		plt.plot(seasonal,label='Seasonality', color='blue')
+		plt.legend(loc='best')
+		plt.subplot(414)
+		plt.plot(residual, label='Residuals', color='blue')
+		plt.legend(loc='best')
+		plt.tight_layout()
+		plt.savefig(f'./Plots/{ticker}_DecomposedTS.png',format = 'png')
 
-	## Saving Evaluation of Time Series Data - Stationarity test, Time Series Decomposition and ACF, PACF
-	stationarity_check(df,ticker)
-	plot_acf_pacf(df,ticker)
+		## Training ARIMA Model
 
-	## Time Series Decomposition
-	decomposition = seasonal_decompose(np.log(df))
-
-	# Get trend, seasonality, and residuals
-	trend = decomposition.trend
-	seasonal = decomposition.seasonal
-	residual = decomposition.resid
-
-	# Saving the Decomposed Time Series Data
-	plt.figure(figsize=(12,8))
-	plt.subplot(411)
-	plt.plot(np.log(df), label='Original', color='blue')
-	plt.legend(loc='best')
-	plt.subplot(412)
-	plt.plot(trend, label='Trend', color='blue')
-	plt.legend(loc='best')
-	plt.subplot(413)
-	plt.plot(seasonal,label='Seasonality', color='blue')
-	plt.legend(loc='best')
-	plt.subplot(414)
-	plt.plot(residual, label='Residuals', color='blue')
-	plt.legend(loc='best')
-	plt.tight_layout()
-	plt.savefig(f'./Plots/{ticker}_DecomposedTS.png',format = 'png')
-
-	## Training ARIMA Model
-
-	Predictions = AARIMA_training(df,ticker)
-	df.to_csv(f'./Data/{ticker}_historical_actuals.csv')
-	Predictions.to_csv(f'./Data/{ticker}_Predictions.csv')
+		Predictions = AARIMA_training(df,ticker)
+		df.to_csv(f'./Data/{ticker}_historical_actuals.csv')
+		Predictions.to_csv(f'./Data/{ticker}_Predictions.csv')
 
 
+
+if __name__ == '__main__':
+	lst = ["MSFT","MSFT"]
+	main(tickers=lst)

@@ -3,13 +3,13 @@ name: Build and Deploy to GKE
 on:
   push:
     branches:
-      - dashboard
+      - stocks
 env:
   PROJECT_ID: ${{secrets.GKE_PROD_PROJECT}}
   GKE_CLUSTER: github-actions-gke
   GKE_ZONE: us-central1
-  DEPLOYMENT_NAME: github-actions-dashboard
-  IMAGE: github-actions-gke-dashboard
+  DEPLOYMENT_NAME: github-actions-stocks
+  IMAGE: github-actions-gke-stocks
   TAG: 1.0.0
 
 jobs:
