@@ -1,0 +1,12 @@
+dash
+dash-bootstrap-components
+dash-daq
+dash-table
+matplotlib
+numpy
+pandas
+plotly
+scikit-learn
+scipy
+xgboost
+gunicorn

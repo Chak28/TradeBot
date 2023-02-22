@@ -1,9 +1,0 @@
-pandas
-yfinance
-pmdarima
-matplotlib
-seaborn
-joblib
-flask
-flask_cors
-gevent
