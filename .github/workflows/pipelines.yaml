@@ -5,7 +5,7 @@ on:
     branches:
       - dashboard
 env:
-  PROJECT_ID: ${{secrets.GKE_PROJECT}}
+  PROJECT_ID: ${{secrets.GKE_PROD_PROJECT}}
   GKE_CLUSTER: github-actions-gke
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: github-actions-dashboard
@@ -34,8 +34,8 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
-          service_account_key: ${{secrets.GKE_SA_KEY}}
-          project_id: ${{secrets.GKE_PROJECT}}
+          service_account_key: ${{secrets.GKE_PROD_SA_KEY}}
+          project_id: ${{secrets.GKE_PROD_PROJECT}}
 
       - name: Configure Docker
         run: |-
