@@ -3,7 +3,7 @@ name: Build and Deploy to GKE
 on:
   push:
     branches:
-      - development
+      - dev
 env:
   PROJECT_ID: ${{secrets.GKE_PROD_PROJECT}}
   GKE_CLUSTER: github-actions-gke
